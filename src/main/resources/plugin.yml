@@ -1,0 +1,8 @@
+name: storage-api
+version: '${project.version}'
+main: org.kayteam.storageapi.StorageApi
+api-version: 1.13
+softdepend: [ PlaceholderAPI ]
+authors: [ SirOswaldo ]
+description: Storage api for your minecraft plugins!
+website: https://kayteam.org
