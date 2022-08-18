@@ -76,7 +76,6 @@ public class YML extends Storage{
                             localDirectory = localDirectory.replaceFirst("/", "");
                             localDirectory = localDirectory + "/";
                         }
-
                         InputStream inputStream = getJavaPlugin().getResource(  localDirectory + getFileName() + ".yml");
 
                         if (inputStream != null) {
@@ -138,25 +137,30 @@ public class YML extends Storage{
     }
 
     public void loadDefaultFileConfiguration() {
+        try {
+            if (getFile().createNewFile()) {
+                if (getJavaPlugin() != null) {
+                    String localDirectory = "";
+                    if (!getDirectory().equals(getJavaPlugin().getDataFolder().getPath())) {
+                        localDirectory = getDirectory().replaceAll(getJavaPlugin().getDataFolder().getPath(), "");
+                        localDirectory = localDirectory.replaceAll(File.separator, "/");
+                        localDirectory = localDirectory.replaceFirst("/", "");
+                        localDirectory = localDirectory + "/";
+                    }
 
-        String localDirectory = "";
+                    InputStream inputStream = getJavaPlugin().getResource(  localDirectory + getFileName() + ".yml");
 
-        if (!getDirectory().equals(getJavaPlugin().getDataFolder().getPath())) {
-            localDirectory = getDirectory().replaceAll(getJavaPlugin().getDataFolder().getPath(), "");
-            localDirectory = localDirectory.replaceAll(File.separator, "/");
-            localDirectory = localDirectory.replaceFirst("/", "");
-            localDirectory = localDirectory + "/";
+                    if (inputStream != null) {
+                        Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(reader);
+                        defaultFileConfiguration.setDefaults(defConfig);
+                        defaultFileConfiguration = YamlConfiguration.loadConfiguration(reader);
+                    }
+                }
+            }
+        } catch (IOException | IllegalArgumentException e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Error: Default file failed in the load.");
         }
-
-        InputStream inputStream = getJavaPlugin().getResource(  localDirectory + getFileName() + ".yml");
-
-        if (inputStream != null) {
-            Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(reader);
-            defaultFileConfiguration.setDefaults(defConfig);
-            defaultFileConfiguration = YamlConfiguration.loadConfiguration(reader);
-        }
-
     }
 
     @Override
