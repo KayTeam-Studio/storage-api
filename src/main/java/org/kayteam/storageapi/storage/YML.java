@@ -149,11 +149,12 @@ public class YML extends Storage{
 
         InputStream inputStream = getJavaPlugin().getResource(  localDirectory + getFileName() + ".yml");
 
-        Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-
-        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(reader);
-        defaultFileConfiguration.setDefaults(defConfig);
-        defaultFileConfiguration = YamlConfiguration.loadConfiguration(reader);
+        if (inputStream != null) {
+            Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(reader);
+            defaultFileConfiguration.setDefaults(defConfig);
+            defaultFileConfiguration = YamlConfiguration.loadConfiguration(reader);
+        }
 
     }
 

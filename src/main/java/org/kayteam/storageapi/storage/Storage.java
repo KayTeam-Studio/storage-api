@@ -20,12 +20,12 @@ public abstract class Storage {
 
     public Storage(JavaPlugin javaPlugin, String directory, String fileName) {
         this.javaPlugin = javaPlugin;
-        this.directory = directory;
+        this.directory = javaPlugin.getDataFolder().getPath() + File.separator + directory;
         this.fileName = fileName;
     }
     public Storage(JavaPlugin javaPlugin, String fileName) {
         this.javaPlugin = javaPlugin;
-        this.directory = "";
+        this.directory = javaPlugin.getDataFolder().getPath();
         this.fileName = fileName;
     }
     public Storage(String directory, String fileName) {
