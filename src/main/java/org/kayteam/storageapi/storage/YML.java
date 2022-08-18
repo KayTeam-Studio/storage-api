@@ -88,8 +88,9 @@ public class YML extends Storage{
                 Bukkit.getLogger().log(Level.SEVERE, "Error: Local file failed in load.");
             }
         }
-
-        loadDefaultFileConfiguration();
+        if (getJavaPlugin() != null) {
+            loadDefaultFileConfiguration();
+        }
 
         fileConfiguration = YamlConfiguration.loadConfiguration(getFile());
 
