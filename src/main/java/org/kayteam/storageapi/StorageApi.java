@@ -11,6 +11,8 @@ public final class StorageApi extends JavaPlugin {
         BrandSender.onEnable(this);
         YML settings = new YML(this, "settings");
         settings.register();
+        System.out.println(settings.getInt("test", 11, true));
+        System.out.println(settings.getItemStack("removePoint.item", null, true));
     }
 
     @Override

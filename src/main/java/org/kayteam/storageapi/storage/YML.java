@@ -692,7 +692,6 @@ public class YML extends Storage{
     public ItemStack getCustomSkull(String url) {
 
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-
         if (url.isEmpty()) return head;
 
         SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
@@ -709,9 +708,7 @@ public class YML extends Storage{
         }
 
         head.setItemMeta(skullMeta);
-
         return head;
-
     }
 
     @Override
@@ -750,21 +747,20 @@ public class YML extends Storage{
 
                     String value = defaultFileConfiguration.getString(path + ".material").replaceFirst("basehead-", "");
 
-                    SkullMeta meta = (SkullMeta) result.getItemMeta();
-
+                    SkullMeta skullMeta = (SkullMeta) result.getItemMeta();
                     GameProfile profile = new GameProfile(UUID.randomUUID(), null);
 
                     profile.getProperties().put("textures", new Property("textures", value));
 
                     try {
-                        Method mtd = result.getClass().getDeclaredMethod("setProfile", GameProfile.class);
+                        Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
                         mtd.setAccessible(true);
-                        mtd.invoke(result, profile);
+                        mtd.invoke(skullMeta, profile);
                     } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
                         ex.printStackTrace();
                     }
 
-                    result.setItemMeta(meta);
+                    result.setItemMeta(skullMeta);
 
                 } else if (defaultFileConfiguration.getString(path + ".material").startsWith("playerhead-")) {
 
@@ -927,21 +923,20 @@ public class YML extends Storage{
 
                 String value = getString(path + ".material").replaceFirst("basehead-", "");
 
-                SkullMeta meta = (SkullMeta) result.getItemMeta();
-
+                SkullMeta skullMeta = (SkullMeta) result.getItemMeta();
                 GameProfile profile = new GameProfile(UUID.randomUUID(), null);
 
                 profile.getProperties().put("textures", new Property("textures", value));
 
                 try {
-                    Method mtd = result.getClass().getDeclaredMethod("setProfile", GameProfile.class);
+                    Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
                     mtd.setAccessible(true);
-                    mtd.invoke(result, profile);
+                    mtd.invoke(skullMeta, profile);
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
                     ex.printStackTrace();
                 }
 
-                result.setItemMeta(meta);
+                result.setItemMeta(skullMeta);
 
             } else if (getString(path + ".material").startsWith("playerhead-")) {
 
