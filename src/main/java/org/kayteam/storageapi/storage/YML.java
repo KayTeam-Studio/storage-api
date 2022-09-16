@@ -177,19 +177,12 @@ public class YML extends Storage{
 
     @Override
     public Object get(String path) {
-        if (!contains(path)) {
-            if (defaultFileConfiguration != null) {
-                if (defaultFileConfiguration.contains(path)) {
-                    return defaultFileConfiguration.get(path);
-                }
-            }
-        }
-        return fileConfiguration.get(path);
+        return get(path, null);
     }
 
     @Override
     public Object get(String path, Object def) {
-        return get(path, def, false);
+        return get(path, def, true);
     }
 
     @Override
@@ -214,19 +207,12 @@ public class YML extends Storage{
 
     @Override
     public boolean getBoolean(String path) {
-        if (!contains(path)) {
-            if (defaultFileConfiguration != null) {
-                if (defaultFileConfiguration.contains(path)) {
-                    return defaultFileConfiguration.getBoolean(path);
-                }
-            }
-        }
-        return fileConfiguration.getBoolean(path);
+        return getBoolean(path, false);
     }
 
     @Override
     public boolean getBoolean(String path, boolean def) {
-        return getBoolean(path, def, false);
+        return getBoolean(path, def, true);
     }
 
     @Override
@@ -256,19 +242,12 @@ public class YML extends Storage{
 
     @Override
     public int getInt(String path) {
-        if (!contains(path)) {
-            if (defaultFileConfiguration != null) {
-                if (defaultFileConfiguration.contains(path)) {
-                    return defaultFileConfiguration.getInt(path);
-                }
-            }
-        }
-        return fileConfiguration.getInt(path);
+        return getInt(path, 0);
     }
 
     @Override
     public int getInt(String path, int def) {
-        return getInt(path, def, false);
+        return getInt(path, def, true);
     }
 
     @Override
@@ -298,19 +277,12 @@ public class YML extends Storage{
 
     @Override
     public long getLong(String path) {
-        if (!contains(path)) {
-            if (defaultFileConfiguration != null) {
-                if (defaultFileConfiguration.contains(path)) {
-                    return defaultFileConfiguration.getLong(path);
-                }
-            }
-        }
-        return fileConfiguration.getLong(path);
+        return getLong(path, 0);
     }
 
     @Override
     public long getLong(String path, long def) {
-        return getLong(path, def, false);
+        return getLong(path, def, true);
     }
 
     @Override
@@ -340,19 +312,12 @@ public class YML extends Storage{
 
     @Override
     public double getDouble(String path) {
-        if (!contains(path)) {
-            if (defaultFileConfiguration != null) {
-                if (defaultFileConfiguration.contains(path)) {
-                    return defaultFileConfiguration.getDouble(path);
-                }
-            }
-        }
-        return fileConfiguration.getDouble(path);
+        return getDouble(path, 0);
     }
 
     @Override
     public double getDouble(String path, double def) {
-        return getDouble(path, def, false);
+        return getDouble(path, def, true);
     }
 
     @Override
@@ -382,26 +347,7 @@ public class YML extends Storage{
 
     @Override
     public String getString(String path) {
-        String result = "";
-        if (!contains(path)) {
-            if (defaultFileConfiguration != null) {
-                if (defaultFileConfiguration.contains(path)) {
-                    result = defaultFileConfiguration.getString(path);
-                }
-            }
-        } else {
-            result = fileConfiguration.getString(path);
-        }
-
-        for (String key:getGlobalReplacements().keySet()) {
-            result = result.replaceAll(key, getGlobalReplacements().get(key));
-        }
-
-        for (String key:getReplacements().keySet()) {
-            result = result.replaceAll(key, getGlobalReplacements().get(key));
-        }
-
-        return result;
+        return getString(path, new String[][]{});
     }
 
     public String getString(String path, String[][] replacements) {
@@ -418,7 +364,7 @@ public class YML extends Storage{
 
     @Override
     public String getString(String path, String def) {
-        return getString(path, def, false);
+        return getString(path, def, true);
     }
 
     public String getString(String path, String def, String[][] replacements) {
@@ -478,34 +424,7 @@ public class YML extends Storage{
 
     @Override
     public List<String> getStringList(String path) {
-        List<String> result = new ArrayList<>();
-        if (!contains(path)) {
-            if (defaultFileConfiguration != null) {
-                if (defaultFileConfiguration.contains(path)) {
-                    result = defaultFileConfiguration.getStringList(path);
-                }
-            }
-        } else {
-            result = fileConfiguration.getStringList(path);
-        }
-
-        for (int i = 0; i < result.size(); i++) {
-
-            String line = result.get(i);
-
-            for (String key:getGlobalReplacements().keySet()) {
-                line = line.replaceAll(key, getGlobalReplacements().get(key));
-            }
-
-            for (String key:getReplacements().keySet()) {
-                line = line.replaceAll(key, getGlobalReplacements().get(key));
-            }
-
-            result.set(i, line);
-
-        }
-
-        return result;
+        return getStringList(path, new String[][]{});
     }
 
     public List<String> getStringList(String path, String[][] replacements) {
@@ -610,37 +529,7 @@ public class YML extends Storage{
 
     @Override
     public Location getLocation(String path) {
-        String locationString = getString(path);
-
-        Location location = null;
-
-        if (locationString.split(":").length == 4) {
-            try {
-                World world = Bukkit.getWorld(locationString.split(":")[0]);
-                double x = Double.parseDouble(locationString.split(":")[1]);
-                double y = Double.parseDouble(locationString.split(":")[2]);
-                double z = Double.parseDouble(locationString.split(":")[3]);
-                location = new Location(world, x, y, z);
-            } catch (NumberFormatException | NullPointerException | PatternSyntaxException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (locationString.split(":").length == 6) {
-            try {
-                World world = Bukkit.getWorld(locationString.split(":")[0]);
-                double x = Double.parseDouble(locationString.split(":")[1]);
-                double y = Double.parseDouble(locationString.split(":")[2]);
-                double z = Double.parseDouble(locationString.split(":")[3]);
-                float yaw = Float.parseFloat(locationString.split(":")[4]);
-                float pitch = Float.parseFloat(locationString.split(":")[5]);
-                location = new Location(world, x, y, z, yaw, pitch);
-            } catch (NumberFormatException | NullPointerException | PatternSyntaxException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return location;
+        return getLocation(path, null);
     }
 
     @Override
@@ -681,11 +570,8 @@ public class YML extends Storage{
             return false;
         }
 
-        if (!contains(path + ".material")) {
-            return false;
-        }
+        return contains(path + ".material");
 
-        return true;
     }
 
 
@@ -713,370 +599,12 @@ public class YML extends Storage{
 
     @Override
     public ItemStack getItemStack(String path) {
-
-        ItemStack result = null;
-
-        if (!contains(path)) {
-            if (defaultFileConfiguration.contains(path)) {
-                // Amount
-                int amount = defaultFileConfiguration.getInt(path + ".amount", 1);
-
-                if (defaultFileConfiguration.getString(path + ".material").startsWith("basehead-")) {
-
-                    XMaterial xMaterial = XMaterial.matchXMaterial("PLAYER_HEAD").orElse(null);
-
-                    Material material = xMaterial.parseMaterial();
-
-                    // MaterialData
-                    short data = -1;
-                    if (defaultFileConfiguration.contains(path + ".data")) {
-                        if (defaultFileConfiguration.isInt(path + ".data")) {
-                            data = (short) defaultFileConfiguration.getInt(path + ".data");
-                        }
-                    } else{
-                        data = xMaterial.getData();
-                    }
-
-                    if (material != null) {
-                        if (data != -1) {
-                            result = new ItemStack(material, amount, data);
-                        } else {
-                            result = new ItemStack(material, amount);
-                        }
-                    }
-
-                    String value = defaultFileConfiguration.getString(path + ".material").replaceFirst("basehead-", "");
-
-                    SkullMeta skullMeta = (SkullMeta) result.getItemMeta();
-                    GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-
-                    profile.getProperties().put("textures", new Property("textures", value));
-
-                    try {
-                        Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
-                        mtd.setAccessible(true);
-                        mtd.invoke(skullMeta, profile);
-                    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-                        ex.printStackTrace();
-                    }
-
-                    result.setItemMeta(skullMeta);
-
-                } else if (defaultFileConfiguration.getString(path + ".material").startsWith("playerhead-")) {
-
-                    XMaterial xMaterial = XMaterial.matchXMaterial("PLAYER_HEAD").orElse(null);
-                    assert xMaterial != null;
-                    Material material = xMaterial.parseMaterial();
-
-                    // MaterialData
-                    short data = -1;
-                    if (defaultFileConfiguration.contains(path + ".data")) {
-                        if (defaultFileConfiguration.isInt(path + ".data")) {
-                            data = (short) defaultFileConfiguration.getInt(path + ".data");
-                        }
-                    } else{
-                        data = xMaterial.getData();
-                    }
-
-                    if (material != null) {
-                        if (data != -1) {
-                            result = new ItemStack(material, amount, data);
-                        } else {
-                            result = new ItemStack(material, amount);
-                        }
-                    }
-
-                    SkullMeta skullMeta = (SkullMeta) result.getItemMeta();
-                    skullMeta.setOwner(defaultFileConfiguration.getString(path + ".material").replaceFirst("playerhead-", ""));
-                    result.setItemMeta(skullMeta);
-
-                } else {
-                    XMaterial xMaterial = XMaterial.matchXMaterial(defaultFileConfiguration.getString(path + ".material")).orElse(null);
-                    assert xMaterial != null;
-                    Material material = xMaterial.parseMaterial();
-
-                    // MaterialData
-                    short data = -1;
-                    if (defaultFileConfiguration.contains(path + ".data")) {
-                        if (defaultFileConfiguration.isInt(path + ".data")) {
-                            data = (short) defaultFileConfiguration.getInt(path + ".data");
-                        }
-                    } else{
-                        data = xMaterial.getData();
-                    }
-
-                    if (material != null) {
-                        if (data != -1) {
-                            result = new ItemStack(material, amount, data);
-                        } else {
-                            result = new ItemStack(material, amount);
-                        }
-                    }
-                }
-
-                if (result != null) {
-                    ItemMeta itemMeta = result.getItemMeta();
-                    if (itemMeta != null) {
-                        // DisplayName
-                        if (defaultFileConfiguration.contains(path + ".name")) {
-                            if (defaultFileConfiguration.isString(path + ".name")) {
-                                itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', defaultFileConfiguration.getString(path + ".name")));
-                            }
-                        }
-                        // Lore
-                        if (defaultFileConfiguration.contains(path + ".lore")) {
-                            if (defaultFileConfiguration.isList(path + ".lore")) {
-                                List<String> lore = defaultFileConfiguration.getStringList(path + ".lore");
-                                lore.replaceAll(textToTranslate -> ChatColor.translateAlternateColorCodes('&', textToTranslate));
-                                itemMeta.setLore(lore);
-                            }
-                        }
-                        // ItemFlag
-                        if (defaultFileConfiguration.contains(path + ".flags")) {
-                            if (defaultFileConfiguration.isList(path + ".flags")) {
-                                List<String> flags = defaultFileConfiguration.getStringList(path + ".flags");
-                                for (String flag:flags) {
-                                    ItemFlag itemFlag = ItemFlag.valueOf(flag);
-                                    itemMeta.addItemFlags(itemFlag);
-                                }
-                            }
-                        }
-                    }
-                    result.setItemMeta(itemMeta);
-                    // Enchantments
-                    if (defaultFileConfiguration.contains(path + ".enchantments")) {
-                        Set<String> names = Objects.requireNonNull(defaultFileConfiguration.getConfigurationSection(path + ".enchantments")).getValues(false).keySet();
-                        for (String name:names) {
-                            Enchantment enchantment = Enchantment.getByName(name);
-                            if (enchantment != null) {
-                                result.addUnsafeEnchantment(enchantment, defaultFileConfiguration.getInt(path + ".enchantments." + name));
-                            }
-                        }
-                    }
-                    // Durability
-                    if (defaultFileConfiguration.contains(path + ".durability")) {
-                        if (defaultFileConfiguration.isInt(path + ".durability")) {
-                            result.setDurability((short) defaultFileConfiguration.getInt(path + ".durability"));
-                        }
-                    }
-                    // ITEM NBTAPI
-                    if (defaultFileConfiguration.contains(path + ".nbt")){
-                        NBTItem nbtItem = new NBTItem(result);
-                        for(String key : Objects.requireNonNull(defaultFileConfiguration.getConfigurationSection(path + ".nbt")).getKeys(false)){
-                            try{
-                                if(defaultFileConfiguration.isString(path + ".nbt." + key)){
-                                    nbtItem.setString(key, defaultFileConfiguration.getString(path + ".nbt." + key));
-                                }else if(defaultFileConfiguration.isInt(path + ".nbt." + key)){
-                                    nbtItem.setInteger(key, defaultFileConfiguration.getInt(path + ".nbt." + key));
-                                }else{
-                                    Bukkit.getLogger().log(Level.SEVERE, "An error has occurred trying load NBT: "+key+". Please enter a valid type: STRING/INTEGER.");
-                                }
-                            }catch (Exception e){
-                                Bukkit.getLogger().log(Level.SEVERE, "An error has occurred trying load NBT: "+key);
-                            }
-                        }
-                        result = nbtItem.getItem();
-                    }
-                    // LEATHER ARMOR ITEM
-                    if (result.getType().equals(Material.valueOf("LEATHER_HELMET"))
-                            || result.getType().equals(Material.valueOf("LEATHER_CHESTPLATE"))
-                            || result.getType().equals(Material.valueOf("LEATHER_LEGGINGS"))
-                            || result.getType().equals(Material.valueOf("LEATHER_BOOTS"))) {
-                        if (contains(path + ".color") && isString(path + ".color")) {
-                            // color: "#E5E533"
-                            String colorString =defaultFileConfiguration. getString(path + ".color").replaceAll("#", "0x");
-                            int color = Integer.parseInt(colorString);
-                            LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) result.getItemMeta();
-                            leatherArmorMeta.setColor(Color.fromRGB(color));
-                            result.setItemMeta(leatherArmorMeta);
-                        }
-                    }
-                }
-            }
-        } else {
-            // Amount
-            int amount = getInt(path + ".amount", 1);
-
-            if (getString(path + ".material").startsWith("basehead-")) {
-
-                XMaterial xMaterial = XMaterial.matchXMaterial("PLAYER_HEAD").orElse(null);
-
-                Material material = xMaterial.parseMaterial();
-
-                // MaterialData
-                short data = -1;
-                if (contains(path + ".data")) {
-                    if (isInt(path + ".data")) {
-                        data = (short) getInt(path + ".data");
-                    }
-                } else{
-                    data = xMaterial.getData();
-                }
-
-                if (material != null) {
-                    if (data != -1) {
-                        result = new ItemStack(material, amount, data);
-                    } else {
-                        result = new ItemStack(material, amount);
-                    }
-                }
-
-                String value = getString(path + ".material").replaceFirst("basehead-", "");
-
-                SkullMeta skullMeta = (SkullMeta) result.getItemMeta();
-                GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-
-                profile.getProperties().put("textures", new Property("textures", value));
-
-                try {
-                    Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
-                    mtd.setAccessible(true);
-                    mtd.invoke(skullMeta, profile);
-                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-                    ex.printStackTrace();
-                }
-
-                result.setItemMeta(skullMeta);
-
-            } else if (getString(path + ".material").startsWith("playerhead-")) {
-
-                XMaterial xMaterial = XMaterial.matchXMaterial("PLAYER_HEAD").orElse(null);
-                assert xMaterial != null;
-                Material material = xMaterial.parseMaterial();
-
-                // MaterialData
-                short data = -1;
-                if (contains(path + ".data")) {
-                    if (isInt(path + ".data")) {
-                        data = (short) getInt(path + ".data");
-                    }
-                } else{
-                    data = xMaterial.getData();
-                }
-
-                if (material != null) {
-                    if (data != -1) {
-                        result = new ItemStack(material, amount, data);
-                    } else {
-                        result = new ItemStack(material, amount);
-                    }
-                }
-
-                SkullMeta skullMeta = (SkullMeta) result.getItemMeta();
-                skullMeta.setOwner(getString(path + ".material").replaceFirst("playerhead-", ""));
-                result.setItemMeta(skullMeta);
-
-            } else {
-                XMaterial xMaterial = XMaterial.matchXMaterial(getString(path + ".material")).orElse(null);
-                assert xMaterial != null;
-                Material material = xMaterial.parseMaterial();
-
-                // MaterialData
-                short data = -1;
-                if (contains(path + ".data")) {
-                    if (isInt(path + ".data")) {
-                        data = (short) getInt(path + ".data");
-                    }
-                } else{
-                    data = xMaterial.getData();
-                }
-
-                if (material != null) {
-                    if (data != -1) {
-                        result = new ItemStack(material, amount, data);
-                    } else {
-                        result = new ItemStack(material, amount);
-                    }
-                }
-            }
-
-            if (result != null) {
-                ItemMeta itemMeta = result.getItemMeta();
-                if (itemMeta != null) {
-                    // DisplayName
-                    if (contains(path + ".name")) {
-                        if (isString(path + ".name")) {
-                            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getString(path + ".name")));
-                        }
-                    }
-                    // Lore
-                    if (contains(path + ".lore")) {
-                        if (isStringList(path + ".lore")) {
-                            List<String> lore = getStringList(path + ".lore");
-                            lore.replaceAll(textToTranslate -> ChatColor.translateAlternateColorCodes('&', textToTranslate));
-                            itemMeta.setLore(lore);
-                        }
-                    }
-                    // ItemFlag
-                    if (contains(path + ".flags")) {
-                        if (isStringList(path + ".flags")) {
-                            List<String> flags = getStringList(path + ".flags");
-                            for (String flag:flags) {
-                                ItemFlag itemFlag = ItemFlag.valueOf(flag);
-                                itemMeta.addItemFlags(itemFlag);
-                            }
-                        }
-                    }
-                }
-                result.setItemMeta(itemMeta);
-                // Enchantments
-                if (contains(path + ".enchantments")) {
-                    Set<String> names = Objects.requireNonNull(fileConfiguration.getConfigurationSection(path + ".enchantments")).getValues(false).keySet();
-                    for (String name:names) {
-                        Enchantment enchantment = Enchantment.getByName(name);
-                        if (enchantment != null) {
-                            result.addUnsafeEnchantment(enchantment, getInt(path + ".enchantments." + name));
-                        }
-                    }
-                }
-                // Durability
-                if (contains(path + ".durability")) {
-                    if (isInt(path + ".durability")) {
-                        result.setDurability((short) getInt(path + ".durability"));
-                    }
-                }
-                // ITEM NBTAPI
-                if (contains(path + ".nbt")){
-                    NBTItem nbtItem = new NBTItem(result);
-                    for(String key : Objects.requireNonNull(fileConfiguration.getConfigurationSection(path + ".nbt")).getKeys(false)){
-                        try{
-                            if(isString(path + ".nbt." + key)){
-                                nbtItem.setString(key, getString(path + ".nbt." + key));
-                            }else if(isInt(path + ".nbt." + key)){
-                                nbtItem.setInteger(key, getInt(path + ".nbt." + key));
-                            }else{
-                                Bukkit.getLogger().log(Level.SEVERE, "An error has occurred trying load NBT: "+key+". Please enter a valid type: STRING/INTEGER.");
-                            }
-                        }catch (Exception e){
-                            Bukkit.getLogger().log(Level.SEVERE, "An error has occurred trying load NBT: "+key);
-                        }
-                    }
-                    result = nbtItem.getItem();
-                }
-                // LEATHER ARMOR ITEM
-                if (result.getType().equals(Material.valueOf("LEATHER_HELMET"))
-                        || result.getType().equals(Material.valueOf("LEATHER_CHESTPLATE"))
-                        || result.getType().equals(Material.valueOf("LEATHER_LEGGINGS"))
-                        || result.getType().equals(Material.valueOf("LEATHER_BOOTS"))) {
-                    if (contains(path + ".color") && isString(path + ".color")) {
-                        // color: "#E5E533"
-                        String colorString = getString(path + ".color").replaceAll("#", "0x");
-                        int color = Integer.parseInt(colorString);
-                        LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) result.getItemMeta();
-                        leatherArmorMeta.setColor(Color.fromRGB(color));
-                        result.setItemMeta(leatherArmorMeta);
-                    }
-                }
-            }
-
-        }
-
-        return result;
+        return getItemStack(path, null);
     }
 
     @Override
     public ItemStack getItemStack(String path, ItemStack def) {
-        ItemStack result = getItemStack(path);
+        ItemStack result = getItemStack(path, def, true);
         if (result == null) {
             return def;
         }
