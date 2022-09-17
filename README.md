@@ -10,7 +10,7 @@
 
 ```XML
 <dependency>
-    <groupId>com.github.SirOswaldo</groupId>
+    <groupId>com.github.KayTeam-Studio</groupId>
     <artifactId>storage-api</artifactId>
     <version>VERSION</version>
 </dependency>
@@ -24,10 +24,10 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.SirOswaldo:action-api:VERSION'
+    implementation 'com.github.KayTeam-Studio:action-api:VERSION'
 }
 ```
 Check the last released version in Releases section
 
 ## How to use
-https://github.com/SirOswaldo/storage-api/wiki
+https://github.com/KayTeam-Studio/storage-api/wiki
