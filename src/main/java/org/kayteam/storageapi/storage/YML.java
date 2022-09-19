@@ -377,15 +377,7 @@ public class YML extends Storage {
     }
 
     public String getString(String path, String[][] replacements) {
-        String result = getString(path);
-
-        for (String[] replacement:replacements) {
-            String key = replacement[0];
-            String value = replacement[1];
-            result = result.replaceAll(key, value);
-        }
-
-        return result;
+        return getString( path , "" , replacements );
     }
 
     @Override
@@ -399,8 +391,10 @@ public class YML extends Storage {
 
     @Override
     public String getString(String path, String def, boolean setDefaultIfNoExist) {
+        return getString( path , def , setDefaultIfNoExist , new String[][]{} );
+    }
 
-        String result = "";
+    public String getString(String path, String def, boolean setDefaultIfNoExist, String[][] replacements) {
 
         if (!contains(path)) {
             if (defaultFileConfiguration != null) {
@@ -408,15 +402,21 @@ public class YML extends Storage {
                     String defaultFileValue = defaultFileConfiguration.getString(path);
                     set(path, defaultFileValue);
                     save();
-                    result = defaultFileValue;
+                    return defaultFileValue;
                 } else {
                     if (setDefaultIfNoExist) set(path, def);
                     save();
-                    result = def;
+                    return def;
                 }
             }
-        } else {
-            result = fileConfiguration.getString(path);
+        }
+
+        String result = fileConfiguration.getString( path );
+
+        for (String[] replacement:replacements) {
+            String key = replacement[0];
+            String value = replacement[1];
+            result = result.replaceAll(key, value);
         }
 
         for (String key:getGlobalReplacements().keySet()) {
@@ -428,18 +428,7 @@ public class YML extends Storage {
         }
 
         return result;
-    }
 
-    public String getString(String path, String def, boolean setDefaultIfNoExist, String[][] replacements) {
-        String result = getString(path, def, setDefaultIfNoExist);
-
-        for (String[] replacement:replacements) {
-            String key = replacement[0];
-            String value = replacement[1];
-            result = result.replaceAll(key, value);
-        }
-
-        return result;
     }
 
     @Override
