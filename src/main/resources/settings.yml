@@ -1,4 +1,11 @@
 test: 10
+testItem:
+  material: REPEATER
+  name: "&aActual Point Options"
+  slot: 11
+  lore:
+    - ""
+    - " &7&oLeft Click to open"
 removePoint:
   slot: 3
   item:

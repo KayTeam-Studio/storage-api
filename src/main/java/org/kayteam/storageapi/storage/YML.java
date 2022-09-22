@@ -66,29 +66,36 @@ public class YML extends Storage {
         File directory = new File(getDirectory());
 
         if (!directory.exists()) {
-            if (directory.mkdirs()) {
+            if (!directory.mkdirs()) {
                 Bukkit.getLogger().log(Level.SEVERE, "Error: Fail in directory creation.");
             }
         }
-
+        System.out.println("0");
         setFile(new File(getDirectory(), getFileName() + ".yml"));
 
         if (!getFile().exists()) {
+            System.out.println("1");
             try {
                 if (getFile().createNewFile()) {
+                    System.out.println("2");
                     if (getJavaPlugin() != null) {
                         String localDirectory = "";
                         if (!getDirectory().equals(getJavaPlugin().getDataFolder().getPath())) {
+                            System.out.println("3");
                             localDirectory = getDirectory().replaceAll(getJavaPlugin().getDataFolder().getPath(), "");
                             localDirectory = localDirectory.replaceAll(File.separator, "/");
                             localDirectory = localDirectory.replaceFirst("/", "");
                             localDirectory = localDirectory + "/";
                         }
+                        System.out.println("4");
                         InputStream inputStream = getJavaPlugin().getResource(  localDirectory + getFileName() + ".yml");
 
                         if (inputStream != null) {
+                            System.out.println("5");
                             getJavaPlugin().saveResource(localDirectory + getFileName() + ".yml", true);
                         }
+
+                        System.out.println("6");
                     }
                 }
             } catch (IOException | IllegalArgumentException e) {
@@ -96,10 +103,12 @@ public class YML extends Storage {
             }
         }
         if (getJavaPlugin() != null) {
+            System.out.println("7");
             loadDefaultFileConfiguration();
         }
 
         fileConfiguration = YamlConfiguration.loadConfiguration(getFile());
+        System.out.println("8");
 
         if (contains("replacements.global")) {
             if (fileConfiguration.isConfigurationSection("replacements.global")) {
@@ -144,29 +153,46 @@ public class YML extends Storage {
         backup.save();
     }
 
+    public List<YML> getYMLFiles(JavaPlugin javaPlugin, String directory) {
+        return getYMLFiles(javaPlugin.getDataFolder() + File.separator + directory);
+    }
+
+    public static List<YML> getYMLFiles(String directory) {
+        List<YML> simpleYMLList = new ArrayList<>();
+        File dir = new File(directory);
+        if (dir.exists()) {
+            File[] files = dir.listFiles((dir1, name) -> name.endsWith(".yml"));
+            if (files != null) for (File file:files) simpleYMLList.add(new YML(directory, file.getName().replaceAll(".yml", "")));
+        }
+        return simpleYMLList;
+    }
+
     public void loadDefaultFileConfiguration() {
         try {
-            if (getFile().createNewFile()) {
-                if (getJavaPlugin() != null) {
-                    String localDirectory = "";
-                    if (!getDirectory().equals(getJavaPlugin().getDataFolder().getPath())) {
-                        localDirectory = getDirectory().replaceAll(getJavaPlugin().getDataFolder().getPath(), "");
-                        localDirectory = localDirectory.replaceAll(File.separator, "/");
-                        localDirectory = localDirectory.replaceFirst("/", "");
-                        localDirectory = localDirectory + "/";
-                    }
+            System.out.println("9");
+            if (getJavaPlugin() != null) {
+                String localDirectory = "";
+                if (!getDirectory().equals(getJavaPlugin().getDataFolder().getPath())) {
+                    System.out.println("10");
+                    localDirectory = getDirectory().replaceAll(getJavaPlugin().getDataFolder().getPath(), "");
+                    localDirectory = localDirectory.replaceAll(File.separator, "/");
+                    localDirectory = localDirectory.replaceFirst("/", "");
+                    localDirectory = localDirectory + "/";
+                }
 
-                    InputStream inputStream = getJavaPlugin().getResource(  localDirectory + getFileName() + ".yml");
+                System.out.println("11");
+                InputStream inputStream = getJavaPlugin().getResource(  localDirectory + getFileName() + ".yml");
 
-                    if (inputStream != null) {
-                        Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-                        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(reader);
-                        defaultFileConfiguration.setDefaults(defConfig);
-                        defaultFileConfiguration = YamlConfiguration.loadConfiguration(reader);
-                    }
+                System.out.println("12");
+                if (inputStream != null) {
+                    System.out.println("13");
+                    Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                    defaultFileConfiguration = YamlConfiguration.loadConfiguration(reader);
+                    System.out.println("14");
                 }
             }
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             Bukkit.getLogger().log(Level.SEVERE, "Error: Default file failed in the load.");
         }
     }
@@ -269,13 +295,16 @@ public class YML extends Storage {
         if (!contains(path)) {
             if (defaultFileConfiguration != null) {
                 if (defaultFileConfiguration.contains(path)) {
-                    int defaultFileValue = defaultFileConfiguration.getInt(path);
-                    set(path, defaultFileValue);
-                    save();
-                    return defaultFileValue;
+                    if(setDefaultIfNoExist){
+                        set(path, defaultFileConfiguration.getInt(path));
+                        save();
+                    }
+                    return defaultFileConfiguration.getInt(path);
                 } else {
-                    if (setDefaultIfNoExist) set(path, def);
-                    save();
+                    if(setDefaultIfNoExist){
+                        set(path, def);
+                        save();
+                    }
                     return def;
                 }
             }
@@ -795,7 +824,7 @@ public class YML extends Storage {
             }
         } else {
             // Amount
-            int amount = getInt(path + ".amount", 1);
+            int amount = getInt(path + ".amount", 1, false);
 
             if (getString(path + ".material").startsWith("basehead-")) {
 
