@@ -70,32 +70,24 @@ public class YML extends Storage {
                 Bukkit.getLogger().log(Level.SEVERE, "Error: Fail in directory creation.");
             }
         }
-        System.out.println("0");
         setFile(new File(getDirectory(), getFileName() + ".yml"));
 
         if (!getFile().exists()) {
-            System.out.println("1");
             try {
                 if (getFile().createNewFile()) {
-                    System.out.println("2");
                     if (getJavaPlugin() != null) {
                         String localDirectory = "";
                         if (!getDirectory().equals(getJavaPlugin().getDataFolder().getPath())) {
-                            System.out.println("3");
                             localDirectory = getDirectory().replaceAll(getJavaPlugin().getDataFolder().getPath(), "");
                             localDirectory = localDirectory.replaceAll(File.separator, "/");
                             localDirectory = localDirectory.replaceFirst("/", "");
                             localDirectory = localDirectory + "/";
                         }
-                        System.out.println("4");
                         InputStream inputStream = getJavaPlugin().getResource(  localDirectory + getFileName() + ".yml");
 
                         if (inputStream != null) {
-                            System.out.println("5");
                             getJavaPlugin().saveResource(localDirectory + getFileName() + ".yml", true);
                         }
-
-                        System.out.println("6");
                     }
                 }
             } catch (IOException | IllegalArgumentException e) {
@@ -103,12 +95,10 @@ public class YML extends Storage {
             }
         }
         if (getJavaPlugin() != null) {
-            System.out.println("7");
             loadDefaultFileConfiguration();
         }
 
         fileConfiguration = YamlConfiguration.loadConfiguration(getFile());
-        System.out.println("8");
 
         if (contains("replacements.global")) {
             if (fileConfiguration.isConfigurationSection("replacements.global")) {
@@ -169,26 +159,20 @@ public class YML extends Storage {
 
     public void loadDefaultFileConfiguration() {
         try {
-            System.out.println("9");
             if (getJavaPlugin() != null) {
                 String localDirectory = "";
                 if (!getDirectory().equals(getJavaPlugin().getDataFolder().getPath())) {
-                    System.out.println("10");
                     localDirectory = getDirectory().replaceAll(getJavaPlugin().getDataFolder().getPath(), "");
                     localDirectory = localDirectory.replaceAll(File.separator, "/");
                     localDirectory = localDirectory.replaceFirst("/", "");
                     localDirectory = localDirectory + "/";
                 }
 
-                System.out.println("11");
                 InputStream inputStream = getJavaPlugin().getResource(  localDirectory + getFileName() + ".yml");
 
-                System.out.println("12");
                 if (inputStream != null) {
-                    System.out.println("13");
                     Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                     defaultFileConfiguration = YamlConfiguration.loadConfiguration(reader);
-                    System.out.println("14");
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -453,7 +437,7 @@ public class YML extends Storage {
         }
 
         for (String key:getReplacements().keySet()) {
-            result = result.replaceAll(key, getGlobalReplacements().get(key));
+            result = result.replaceAll(key, getReplacements().get(key));
         }
 
         return result;
