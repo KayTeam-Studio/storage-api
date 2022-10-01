@@ -846,7 +846,13 @@ public class YML extends Storage {
                     mtd.setAccessible(true);
                     mtd.invoke(skullMeta, profile);
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-                    ex.printStackTrace();
+                    try{
+                        Field profileField = skullMeta.getClass().getDeclaredField("profile");
+                        profileField.setAccessible(true);
+                        profileField.set(skullMeta, profile);
+                    }catch (NoSuchFieldException | IllegalAccessException e){
+                        e.printStackTrace();
+                    }
                 }
 
                 result.setItemMeta(skullMeta);
