@@ -48,6 +48,12 @@ public class YML extends Storage {
         super(directory, fileName);
     }
 
+    public FileConfiguration getDefaultFileConfiguration() {
+
+        return defaultFileConfiguration;
+
+    }
+
     public FileConfiguration getFileConfiguration() {
         return fileConfiguration;
     }
