@@ -110,7 +110,7 @@ public class YML extends Storage {
             if (fileConfiguration.isConfigurationSection("replacements.global")) {
                 Set<String> keys = fileConfiguration.getConfigurationSection("replacements.global").getKeys(false);
                 for (String key:keys) {
-                    Storage.getGlobalReplacements().put(key, "%" + getString("replacements.global." + key) + "%");
+                    Storage.getGlobalReplacements().put("%" + key + "%", getString("replacements.global." + key));
                 }
             }
         }
@@ -119,7 +119,7 @@ public class YML extends Storage {
             if (fileConfiguration.isConfigurationSection("replacements.local")) {
                 Set<String> keys = fileConfiguration.getConfigurationSection("replacements.local").getKeys(false);
                 for (String key: keys) {
-                    getReplacements().put(key, "%" + getString("replacements.local." + key) + "%");
+                    getReplacements().put("%" + key + "%", getString("replacements.local." + key));
                 }
             }
         }
