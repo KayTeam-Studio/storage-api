@@ -3,8 +3,10 @@ package org.kayteam.storageapi.storage;
 import com.cryptomorin.xseries.XMaterial;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTType;
+import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
@@ -1055,12 +1057,11 @@ public class YML extends Storage {
                 set(path + ".durability", value.getDurability());
             }
             // ITEM NBTAPI
-            NBTItem nbtItem = new NBTItem(value);
-            for(String key : nbtItem.getKeys()){
-                if(nbtItem.getType(key).equals(NBTType.NBTTagString)){
-                    set(path + ".nbt." + key, nbtItem.getString(key));
-                }else if(nbtItem.getType(key).equals(NBTType.NBTTagInt)){
-                    set(path + ".nbt." + key, nbtItem.getInteger(key));
+            for(String key : NBT.get(value, ReadableNBT::getKeys)){
+                if(NBT.get(value, nbt -> nbt.getType(key)).equals(NBTType.NBTTagString)){
+                    set(path + ".nbt." + key, NBT.get(value, nbt -> nbt.getString(key)));
+                }else if(NBT.get(value, nbt -> nbt.getType(key)).equals(NBTType.NBTTagInt)){
+                    set(path + ".nbt." + key, NBT.get(value, nbt -> nbt.getInteger(key)));
                 }
             }
             // LEATHER ARMOR ITEM
