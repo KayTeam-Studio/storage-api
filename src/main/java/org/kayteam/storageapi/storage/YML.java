@@ -845,7 +845,9 @@ public class YML extends Storage {
                 String value = getString(path + ".material").replaceFirst("basehead-", "");
 
                 SkullMeta skullMeta = (SkullMeta) result.getItemMeta();
-                GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+
+
+                GameProfile profile = new GameProfile(UUID.randomUUID(), "KayTeam");
 
                 profile.getProperties().put("textures", new Property("textures", value));
 
