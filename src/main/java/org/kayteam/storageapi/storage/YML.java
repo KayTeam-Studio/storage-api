@@ -6,6 +6,7 @@ import com.mojang.authlib.properties.Property;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTType;
+import de.tr7zw.changeme.nbtapi.iface.ReadableItemNBT;
 import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.*;
@@ -27,6 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.regex.PatternSyntaxException;
 
@@ -1060,10 +1062,10 @@ public class YML extends Storage {
             }
             // ITEM NBTAPI
             for(String key : NBT.get(value, ReadableNBT::getKeys)){
-                if(NBT.get(value, nbt -> nbt.getType(key)).equals(NBTType.NBTTagString)){
-                    set(path + ".nbt." + key, NBT.get(value, nbt -> nbt.getString(key)));
-                }else if(NBT.get(value, nbt -> nbt.getType(key)).equals(NBTType.NBTTagInt)){
-                    set(path + ".nbt." + key, NBT.get(value, nbt -> nbt.getInteger(key)));
+                if(NBT.get(value, (Function<ReadableItemNBT, Object>) nbt -> nbt.getType(key)).equals(NBTType.NBTTagString)){
+                    set(path + ".nbt." + key, NBT.get(value, (Function<ReadableItemNBT, Object>) nbt -> nbt.getString(key)));
+                }else if(NBT.get(value, (Function<ReadableItemNBT, Object>) nbt -> nbt.getType(key)).equals(NBTType.NBTTagInt)){
+                    set(path + ".nbt." + key, NBT.get(value, (Function<ReadableItemNBT, Object>) nbt -> nbt.getInteger(key)));
                 }
             }
             // LEATHER ARMOR ITEM
