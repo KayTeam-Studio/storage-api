@@ -638,7 +638,7 @@ public class YML extends Storage {
         ItemStack result = null;
 
         if (!contains(path)) {
-            if (defaultFileConfiguration.contains(path)) {
+            if (defaultFileConfiguration != null && defaultFileConfiguration.contains(path)) {
                 // Amount
                 int amount = defaultFileConfiguration.getInt(path + ".amount", 1);
 
