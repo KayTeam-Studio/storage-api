@@ -603,13 +603,11 @@ public class YML extends Storage {
 
     @Override
     public boolean isItemStack(String path) {
-
         if (!fileConfiguration.isConfigurationSection(path)) {
             return false;
         }
 
         return contains(path + ".material");
-
     }
 
 
@@ -1097,9 +1095,9 @@ public class YML extends Storage {
 
     public void sendMessage(CommandSender commandSender, String path, String[][] replacements) {
         List<String> messages = new ArrayList<>();
-        if (isStringList(path)) {
+        if (isStringList(path) || defaultFileConfiguration.isList(path)) {
             messages = getStringList(path, replacements);
-        } else if (isString(path)){
+        } else if (isString(path) || defaultFileConfiguration.isString(path)){
             messages.add(getString(path, replacements));
         }
         for (String message : messages) {
