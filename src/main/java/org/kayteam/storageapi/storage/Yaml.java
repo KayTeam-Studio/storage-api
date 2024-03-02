@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class Yaml {
 
@@ -709,7 +710,7 @@ public class Yaml {
                         line = ChatColor.translateAlternateColorCodes('&', line);
                         newLore.add(line);
                     }
-                    meta.setLore(newLore.stream().flatMap(s -> Arrays.stream(s.split("\n"))).toList());
+                    meta.setLore(newLore.stream().flatMap(s -> Arrays.stream(s.split("\n"))).collect(Collectors.toList()));
                 }
             }
             try{
