@@ -709,7 +709,7 @@ public class Yaml {
                         line = ChatColor.translateAlternateColorCodes('&', line);
                         newLore.add(line);
                     }
-                    meta.setLore(newLore);
+                    meta.setLore(newLore.stream().flatMap(s -> Arrays.stream(s.split("\n"))).toList());
                 }
             }
             try{
